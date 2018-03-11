@@ -33,6 +33,7 @@
 #include <giskard_core/giskard_core.hpp>
 #include <giskard_ros/ros_utils.hpp>
 #include <giskard_ros/conversions.hpp>
+#include <giskard_ros/giskard_visualization.hpp>
 
 namespace giskard_ros
 {
@@ -51,6 +52,8 @@ namespace giskard_ros
           trigger_param_loading_serv_( nh_.advertiseService("reload_params", &QPControllerTrajectory::reload_params_callback, this)),
           tf_(std::make_shared<tf2_ros::BufferClient>(tf_ns))
       {
+        gv = new GiskardVisualizer(nh_, current_joint_state_);
+
         read_parameters();
 
         if (!joint_traj_act_.waitForServer(server_timeout))
@@ -92,6 +95,8 @@ namespace giskard_ros
       bool enable_thresholding_trans3d_, enable_thresholding_rot3d_, enable_thresholding_joint_;
       int nWSR_;
       size_t min_num_trajectory_points_, max_num_trajectory_points_;
+
+       GiskardVisualizer *gv;
 
       void js_callback(const sensor_msgs::JointState::ConstPtr& msg)
       {
@@ -183,6 +188,8 @@ namespace giskard_ros
               joint_traj_act_.cancelAllGoals();
               break;
             }
+
+            gv->visualizeController(goal);
 
             // TODO: re-run projection to emulate reactiveness
             monitor_rate.sleep();

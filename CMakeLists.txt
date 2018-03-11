@@ -100,5 +100,8 @@ target_link_libraries(check_controller_yaml ${catkin_LIBRARIES} yaml-cpp)
 add_dependencies(check_controller_yaml ${catkin_EXPORTED_TARGETS})
 
 add_executable(qp_controller_trajectory src/${PROJECT_NAME}/qp_controller_trajectory.cpp)
-target_link_libraries(qp_controller_trajectory ${catkin_LIBRARIES} yaml-cpp)
+target_link_libraries(qp_controller_trajectory ${catkin_LIBRARIES} yaml-cpp giskard_visualization)
 add_dependencies(qp_controller_trajectory ${catkin_EXPORTED_TARGETS})
+
+add_library(giskard_visualization src/${PROJECT_NAME}/giskard_visualization.cpp)
+target_link_libraries(giskard_visualization ${catkin_LIBRARIES})
