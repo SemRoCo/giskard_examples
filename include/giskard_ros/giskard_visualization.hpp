@@ -23,24 +23,12 @@ public:
 
  			segment_map = kdl_tree.getSegments();
 
- 			mesh_resource_path["l_shoulder_pan_link"] = "package://pr2_description/meshes/shoulder_v0/shoulder_pan.dae";
- 			mesh_resource_path["l_shoulder_lift_link"] = "package://pr2_description/meshes/shoulder_v0/shoulder_lift.dae";
- 			mesh_resource_path["l_upper_arm_roll_link"] = "package://pr2_description/meshes/shoulder_v0/upper_arm_roll.dae";
- 			mesh_resource_path["l_upper_arm_link"] = "package://pr2_description/meshes/upper_arm_v0/upper_arm.dae";
- 			mesh_resource_path["l_elbow_flex_link"] = "package://pr2_description/meshes/upper_arm_v0/elbow_flex.dae";
- 			//mesh_resource_path["l_forearm_roll_link"] = "package://pr2_description/meshes/base_v0/base.dae"
- 			mesh_resource_path["l_forearm_link"] = "package://pr2_description/meshes/forearm_v0/forearm.dae";
- 			mesh_resource_path["l_wrist_flex_link"] = "package://pr2_description/meshes/forearm_v0/wrist_flex.dae";
- 			//mesh_resource_path["l_wrist_roll_link"] = "package://pr2_description/meshes/base_v0/base.dae"
- 			//mesh_resource_path["l_force_torque_adapter_link"] = "package://pr2_description/meshes/base_v0/base.dae"
- 			//mesh_resource_path["l_force_torque_link"] = "package://pr2_description/meshes/base_v0/base.dae"
- 			mesh_resource_path["l_gripper_palm_link"] = "package://pr2_description/meshes/gripper_v0/gripper_palm.dae";
-
-
+ 			init();
 	 };
 	~GiskardVisualizer();
 
 	void visualizeController(const giskard_msgs::ControllerListGoalConstPtr	& msg);
+	void deleteMarkers();
 	//void updateJointState(std::map<std::string, double> new_joint_state);
 
 private:
@@ -55,9 +43,16 @@ private:
 		double b;
 	};
 
-	void visualizeTranslation(const giskard_msgs::Controller& c);
-	void visualizeRotation(const giskard_msgs::Controller& c);
-	void visualizeJointcommand(const giskard_msgs::Controller& c);
+	struct linkVisInfo {
+		linkVisInfo(std::string mesh_resource_path, float rotation_marker_scale): mesh_resource_path(mesh_resource_path), rotation_marker_scale(rotation_marker_scale) {};
+		linkVisInfo(){};
+		std::string mesh_resource_path;
+		float rotation_marker_scale;
+	};
+
+	void visualizeTranslation(const giskard_msgs::Controller& c, int marker_id);
+	void visualizeRotation(const giskard_msgs::Controller& c, int base_marker_id);
+	void visualizeJointcommand(const giskard_msgs::Controller& c, int base_marker_id);
 
 	void publishRotationMarker(tf::Vector3 axis, tf::Vector3 goal, int id, std::string frame_id);
 	void publishJointMarker(KDL::Frame jointFrame, std::string mesh_path, int id, std::string frame_id);
@@ -66,9 +61,12 @@ private:
 	void getTipLinks(SegmentMap::const_iterator it, std::string root, tipRootPairVector& tip_links);
 	KDL::JntArray getJointPositionsForChain(KDL::Chain chain, const giskard_msgs::Controller& c);
 
+	void init();
+
 	
 
-	std::unordered_map<std::string, std::string> mesh_resource_path;
+	//std::unordered_map<std::string, std::string> mesh_resource_path;
+	std::unordered_map<std::string, linkVisInfo> link_vis_info_map;
    	const std::map<std::string, double> &current_joint_state;
    	KDL::Tree kdl_tree;
 

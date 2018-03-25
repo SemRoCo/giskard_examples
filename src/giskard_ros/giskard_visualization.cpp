@@ -4,10 +4,39 @@
 
 
 
-void GiskardVisualizer::visualizeTranslation(const giskard_msgs::Controller& c){
+void GiskardVisualizer::init(){
+	link_vis_info_map["l_shoulder_pan_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_pan.dae", 0.2);
+	link_vis_info_map["l_shoulder_lift_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_lift.dae", 0.2);
+	link_vis_info_map["l_upper_arm_roll_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/upper_arm_roll.dae", 0.2);
+	link_vis_info_map["l_upper_arm_link"] = linkVisInfo("package://pr2_description/meshes/upper_arm_v0/upper_arm.dae", 0.2);
+	link_vis_info_map["l_elbow_flex_link"] = linkVisInfo("package://pr2_description/meshes/upper_arm_v0/elbow_flex.dae", 0.15);
+	//mesh_resource_path["l_forearm_roll_link"] = "package://pr2_description/meshes/base_v0/base.dae"
+	link_vis_info_map["l_forearm_link"] = linkVisInfo("package://pr2_description/meshes/forearm_v0/forearm.dae", 0.15);
+	link_vis_info_map["l_wrist_flex_link"] = linkVisInfo("package://pr2_description/meshes/forearm_v0/wrist_flex.dae", 0.07);
+	//mesh_resource_path["l_wrist_roll_link"] = "package://pr2_description/meshes/base_v0/base.dae"
+	//mesh_resource_path["l_force_torque_adapter_link"] = "package://pr2_description/meshes/base_v0/base.dae"
+	//mesh_resource_path["l_force_torque_link"] = "package://pr2_description/meshes/base_v0/base.dae"
+	link_vis_info_map["l_gripper_palm_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/gripper_palm.dae", 0.07);
+
+	link_vis_info_map["r_shoulder_pan_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_pan.dae", 0.2);
+	link_vis_info_map["r_shoulder_lift_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_lift.dae", 0.2);
+	link_vis_info_map["r_upper_arm_roll_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/upper_arm_roll.dae", 0.2);
+	link_vis_info_map["r_upper_arm_link"] = linkVisInfo("package://pr2_description/meshes/upper_arm_v0/upper_arm.dae", 0.2);
+	link_vis_info_map["r_elbow_flex_link"] = linkVisInfo("package://pr2_description/meshes/upper_arm_v0/elbow_flex.dae", 0.15);
+	//mesh_resource_path["l_forearm_roll_link"] = "package://pr2_description/meshes/base_v0/base.dae"
+	link_vis_info_map["r_forearm_link"] = linkVisInfo("package://pr2_description/meshes/forearm_v0/forearm.dae", 0.15);
+	link_vis_info_map["r_wrist_flex_link"] = linkVisInfo("package://pr2_description/meshes/forearm_v0/wrist_flex.dae", 0.07);
+	//mesh_resource_path["l_wrist_roll_link"] = "package://pr2_description/meshes/base_v0/base.dae"
+	//mesh_resource_path["l_force_torque_adapter_link"] = "package://pr2_description/meshes/base_v0/base.dae"
+	//mesh_resource_path["l_force_torque_link"] = "package://pr2_description/meshes/base_v0/base.dae"
+	link_vis_info_map["r_gripper_palm_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/gripper_palm.dae", 0.07);
+}
+
+
+
+void GiskardVisualizer::visualizeTranslation(const giskard_msgs::Controller& c, int marker_id){
 	tf::StampedTransform transform;
 	tf::Vector3 arrow_start;
-
 
 	try{
 		ros::Time now = ros::Time::now();
@@ -20,7 +49,7 @@ void GiskardVisualizer::visualizeTranslation(const giskard_msgs::Controller& c){
 		arrow_end.setY(c.goal_pose.pose.position.y);
 		arrow_end.setZ(c.goal_pose.pose.position.z);
 
-		publishArrowMarker(markerColor(0.5, 1, 0.8, 0), 0, c.goal_pose.header.frame_id, "translation", arrow_start, arrow_end);
+		publishArrowMarker(markerColor(0.5, 1, 0.8, 0), marker_id, c.goal_pose.header.frame_id, "translation", arrow_start, arrow_end);
 
 	}catch(tf::TransformException ex){
 		ROS_ERROR("%s",ex.what());
@@ -59,7 +88,7 @@ void GiskardVisualizer::publishArrowMarker(markerColor color, int id, std::strin
 }
 
 
-void GiskardVisualizer::visualizeRotation(const giskard_msgs::Controller& c){
+void GiskardVisualizer::visualizeRotation(const giskard_msgs::Controller& c, int base_marker_id){
 	try{
 		tf::Transform transformGoalRotation(tf::Quaternion(c.goal_pose.pose.orientation.x, c.goal_pose.pose.orientation.y, c.goal_pose.pose.orientation.z, c.goal_pose.pose.orientation.w), tf::Vector3(0,0,0));
 		tf::StampedTransform transformFrameToTipLink;
@@ -72,25 +101,31 @@ void GiskardVisualizer::visualizeRotation(const giskard_msgs::Controller& c){
 
 		tf::Transform combinedTransform = transformFrameToTipLink * transformGoalRotation;
 
-
-		tf::Vector3 xAxisInGoal = combinedTransform * tf::Vector3(0.1,0,0);
-		tf::Vector3 yAxisInGoal = combinedTransform * tf::Vector3(0,0.1,0);
-		tf::Vector3 zAxisInGoal = combinedTransform * tf::Vector3(0,0,0.1);
-
-		publishArrowMarker(markerColor(0.3, 1, 0, 0), 3, c.tip_link, "rotation_axis", tf::Vector3(0,0,0), xAxisInGoal);
-		publishArrowMarker(markerColor(0.3, 0, 1, 0), 4, c.tip_link, "rotation_axis", tf::Vector3(0,0,0), yAxisInGoal);
-		publishArrowMarker(markerColor(0.3, 0, 0, 1), 5, c.tip_link, "rotation_axis", tf::Vector3(0,0,0), zAxisInGoal);
+		float rotation_scale = 0.1;
+		auto it = link_vis_info_map.find(c.tip_link);
+		if(it != link_vis_info_map.end()){
+			rotation_scale = it->second.rotation_marker_scale;
+		}
 
 
-		publishArrowMarker(markerColor(1, 1, 0, 0), 0, c.tip_link, "rotation_axis", tf::Vector3(0,0,0), tf::Vector3(0.1,0,0));
-		publishArrowMarker(markerColor(1, 0, 1, 0), 1, c.tip_link, "rotation_axis", tf::Vector3(0,0,0), tf::Vector3(0,0.1,0));
-		publishArrowMarker(markerColor(1, 0, 0, 1), 2, c.tip_link, "rotation_axis", tf::Vector3(0,0,0), tf::Vector3(0,0,0.1));
+		tf::Vector3 xAxisInGoal = combinedTransform * tf::Vector3(1,0,0);
+		tf::Vector3 yAxisInGoal = combinedTransform * tf::Vector3(0,1,0);
+		tf::Vector3 zAxisInGoal = combinedTransform * tf::Vector3(0,0,1);
+
+		publishArrowMarker(markerColor(0.3, 1, 0, 0), base_marker_id + 3, c.tip_link, "rotation_axis", tf::Vector3(0,0,0), rotation_scale * xAxisInGoal);
+		publishArrowMarker(markerColor(0.3, 0, 1, 0), base_marker_id + 4, c.tip_link, "rotation_axis", tf::Vector3(0,0,0), rotation_scale * yAxisInGoal);
+		publishArrowMarker(markerColor(0.3, 0, 0, 1), base_marker_id + 5, c.tip_link, "rotation_axis", tf::Vector3(0,0,0), rotation_scale * zAxisInGoal);
+
+
+		publishArrowMarker(markerColor(1, 1, 0, 0), base_marker_id + 0, c.tip_link, "rotation_axis", tf::Vector3(0,0,0), rotation_scale * tf::Vector3(1,0,0));
+		publishArrowMarker(markerColor(1, 0, 1, 0), base_marker_id + 1, c.tip_link, "rotation_axis", tf::Vector3(0,0,0), rotation_scale * tf::Vector3(0,1,0));
+		publishArrowMarker(markerColor(1, 0, 0, 1), base_marker_id + 2, c.tip_link, "rotation_axis", tf::Vector3(0,0,0), rotation_scale * tf::Vector3(0,0,1));
 		
 	
 		
-		publishRotationMarker(tf::Vector3(0.1,0,0), xAxisInGoal, 0, c.tip_link);
-		publishRotationMarker(tf::Vector3(0,0.1,0), yAxisInGoal, 1, c.tip_link);
-		publishRotationMarker(tf::Vector3(0,0,0.1), zAxisInGoal, 2, c.tip_link);
+		publishRotationMarker(rotation_scale * tf::Vector3(1,0,0), xAxisInGoal, base_marker_id + 0, c.tip_link);
+		publishRotationMarker(rotation_scale * tf::Vector3(0,1,0), yAxisInGoal, base_marker_id + 1, c.tip_link);
+		publishRotationMarker(rotation_scale * tf::Vector3(0,0,1), zAxisInGoal, base_marker_id + 2, c.tip_link);
 	}catch(tf::TransformException ex){
 		ROS_ERROR("%s",ex.what());
 	}
@@ -118,12 +153,12 @@ void GiskardVisualizer::publishRotationMarker(tf::Vector3 axis, tf::Vector3 goal
 		p.z = axis.getZ();
 		marker.points.push_back(p);
 	}
-	marker.scale.x = 0.005;
-	marker.scale.z = 0.005;
-	marker.scale.y = 0.005;
+	marker.scale.x = 0.01;
+	marker.scale.z = 0.01;
+	marker.scale.y = 0.01;
 	marker.color.a = 1.0;
 	marker.color.r = 1.0;
-	marker.color.g = 0.7;
+	marker.color.g = 0.8;
 	marker.color.b = 0.0;
 	marker.header.stamp = ros::Time();
 	marker.ns = "rotation";
@@ -189,35 +224,7 @@ KDL::JntArray GiskardVisualizer::getJointPositionsForChain(KDL::Chain chain, con
     return jointpositions;
 }
 
-void GiskardVisualizer::visualizeJointcommand(const giskard_msgs::Controller& c){
-	/*bool exit_value;
-	KDL::Chain main_chain;
-	exit_value = kdl_tree.getChain(c.root_link, c.tip_link, main_chain);
-
-	KDL::ChainFkSolverPos_recursive fksolver(main_chain);
-	
-    KDL::JntArray jointpositions = getJointPositionsForChain(main_chain, c);
-    
-    
-    //calculate segment positions and publish markers
-    for(int segmentIdx = 0; segmentIdx < main_chain.segments.size(); segmentIdx++){
-    	std::string segment_name = main_chain.segments[segmentIdx].getName();
-    	std::cout << "segment name: " << segment_name << std::endl;
-    	auto it = mesh_resource_path.find(segment_name);
-    	if(it == mesh_resource_path.end()){
-    		continue;
-    	}
-
-	 	KDL::Frame cartpos;
-		bool kinematics_status;
-		kinematics_status = fksolver.JntToCart(jointpositions, cartpos, segmentIdx+1);
-		std::cout << "cartpos x " << cartpos.p.x() << " y " << cartpos.p.y() << " z " << cartpos.p.z() << std::endl;
-		
-		visualization_msgs::Marker marker = getJointMarker(cartpos, it->second, segmentIdx, c.root_link);
-		vis_pub.publish(marker);	
-    }*/
-
-
+void GiskardVisualizer::visualizeJointcommand(const giskard_msgs::Controller& c, int base_marker_id){
 	tipRootPairVector tip_links;
 
 	SegmentMap::const_iterator root_iterator = segment_map.find(c.root_link);
@@ -251,8 +258,8 @@ void GiskardVisualizer::visualizeJointcommand(const giskard_msgs::Controller& c)
 		for(int segmentIdx = 0; segmentIdx < tip_chain.segments.size(); segmentIdx++){
 	    	std::string segment_name = tip_chain.segments[segmentIdx].getName();
 	    	//std::cout << "		segment name: " << segment_name << std::endl;
-	    	auto it = mesh_resource_path.find(segment_name);
-	    	if(it == mesh_resource_path.end()){
+	    	auto it = link_vis_info_map.find(segment_name);
+	    	if(it == link_vis_info_map.end() || it->second.mesh_resource_path.size() == 0){
 	    		continue;
 	    	}
 
@@ -262,7 +269,7 @@ void GiskardVisualizer::visualizeJointcommand(const giskard_msgs::Controller& c)
 			KDL::Frame final_frame = base * tip_link_frame;
 			//std::cout << "		final_frame x " << final_frame.p.x() << " y " << final_frame.p.y() << " z " << final_frame.p.z() << std::endl;
 			
-			publishJointMarker(final_frame, it->second, marker_id, c.root_link);
+			publishJointMarker(final_frame, it->second.mesh_resource_path, marker_id + base_marker_id, c.root_link);
 			marker_id++;
  	   }
 	}
@@ -288,8 +295,8 @@ void GiskardVisualizer::publishJointMarker(KDL::Frame jointFrame, std::string me
 	marker.pose.orientation.z = z;
 	marker.pose.orientation.w = w;
 	marker.scale.x = 1.0;
-	marker.scale.z = 1.0;
-	marker.scale.y = 1.0;
+	marker.scale.z = 0.95;
+	marker.scale.y = 0.95;
 	marker.color.a = 0.5;
 	marker.color.r = 1.0;
 	marker.color.g = 0.8;
@@ -303,19 +310,25 @@ void GiskardVisualizer::publishJointMarker(KDL::Frame jointFrame, std::string me
 }
 
 void GiskardVisualizer::visualizeController(const giskard_msgs::ControllerListGoalConstPtr	& msg){
+	int num_translation_controller = 0;
+	int num_rotation_controller = 0;
+	int num_joint_controller = 0;
 	for(giskard_msgs::Controller c : msg->controllers){
 		switch (c.type){
 			case giskard_msgs::Controller::TRANSLATION_3D:
-				visualizeTranslation(c);
+				visualizeTranslation(c, num_translation_controller);
+				num_translation_controller++;
 				break;
 			case giskard_msgs::Controller::JOINT:
-				visualizeJointcommand(c);
+				visualizeJointcommand(c, num_joint_controller * link_vis_info_map.size());
+				num_joint_controller++;
 				break;
 			case giskard_msgs::Controller::ROTATION_3D:
-				visualizeRotation(c);
+				visualizeRotation(c, num_rotation_controller * 10);
+				num_rotation_controller++;
 				break;
 			default:
-				std::cout << "default" << std::endl;
+				ROS_WARN("the controller was not recognized by the visualization");
 				break;
 		}
 	}
@@ -328,4 +341,11 @@ void GiskardVisualizer::visualizeController(const giskard_msgs::ControllerListGo
 
 GiskardVisualizer::~GiskardVisualizer(){
 	
+}
+
+
+void GiskardVisualizer::deleteMarkers(){
+	visualization_msgs::Marker marker;
+	marker.action = 3;
+	vis_pub.publish(marker);
 }

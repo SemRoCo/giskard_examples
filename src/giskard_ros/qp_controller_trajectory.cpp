@@ -170,6 +170,8 @@ namespace giskard_ros
           ros::Time start_time = ros::Time::now();
           ros::Rate monitor_rate(10); // TODO: get this from the parameter server?
 
+           gv->deleteMarkers();
+           
           while((ros::Time::now() - start_time) <= traj_duration)
           {
             if (new_giskard_act_.isPreemptRequested() || !ros::ok())
