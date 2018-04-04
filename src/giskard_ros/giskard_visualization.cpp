@@ -5,6 +5,8 @@
 
 
 void GiskardVisualizer::init(){
+
+	//left arm
 	link_vis_info_map["l_shoulder_pan_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_pan.dae", 0.2);
 	link_vis_info_map["l_shoulder_lift_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_lift.dae", 0.2);
 	link_vis_info_map["l_upper_arm_roll_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/upper_arm_roll.dae", 0.2);
@@ -17,7 +19,15 @@ void GiskardVisualizer::init(){
 	//mesh_resource_path["l_force_torque_adapter_link"] = "package://pr2_description/meshes/base_v0/base.dae"
 	//mesh_resource_path["l_force_torque_link"] = "package://pr2_description/meshes/base_v0/base.dae"
 	link_vis_info_map["l_gripper_palm_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/gripper_palm.dae", 0.07);
+	link_vis_info_map["l_gripper_r_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07);
+	link_vis_info_map["l_gripper_l_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07);
+	link_vis_info_map["l_gripper_l_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07);
+	link_vis_info_map["l_gripper_r_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07);
+	
+	//link_vis_info_map["l_gripper_l_finger_tip_frame"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07);
 
+
+	//right arm
 	link_vis_info_map["r_shoulder_pan_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_pan.dae", 0.2);
 	link_vis_info_map["r_shoulder_lift_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_lift.dae", 0.2);
 	link_vis_info_map["r_upper_arm_roll_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/upper_arm_roll.dae", 0.2);
@@ -234,7 +244,7 @@ void GiskardVisualizer::visualizeJointcommand(const giskard_msgs::Controller& c,
 	int marker_id = 0;
 
 	for(auto p : tip_links){
-		//std::cout << "pair: " << p.first << " " << p.second << std::endl;
+		std::cout << "pair: " << p.first << " " << p.second << std::endl;
 
 
 		bool exit_value;
@@ -257,7 +267,7 @@ void GiskardVisualizer::visualizeJointcommand(const giskard_msgs::Controller& c,
 		
 		for(int segmentIdx = 0; segmentIdx < tip_chain.segments.size(); segmentIdx++){
 	    	std::string segment_name = tip_chain.segments[segmentIdx].getName();
-	    	//std::cout << "		segment name: " << segment_name << std::endl;
+	    	std::cout << "		segment name: " << segment_name << std::endl;
 	    	auto it = link_vis_info_map.find(segment_name);
 	    	if(it == link_vis_info_map.end() || it->second.mesh_resource_path.size() == 0){
 	    		continue;
@@ -295,8 +305,8 @@ void GiskardVisualizer::publishJointMarker(KDL::Frame jointFrame, std::string me
 	marker.pose.orientation.z = z;
 	marker.pose.orientation.w = w;
 	marker.scale.x = 1.0;
-	marker.scale.z = 0.95;
-	marker.scale.y = 0.95;
+	marker.scale.z = 1.0;
+	marker.scale.y = 1.0;
 	marker.color.a = 0.5;
 	marker.color.r = 1.0;
 	marker.color.g = 0.8;
