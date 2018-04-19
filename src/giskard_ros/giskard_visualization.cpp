@@ -7,8 +7,6 @@
 void GiskardVisualizer::init(){
 
 	//left arm
-	link_vis_info_map["l_shoulder_pan_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_pan.dae", 0.2);
-	link_vis_info_map["l_shoulder_lift_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_lift.dae", 0.2);
 	link_vis_info_map["l_upper_arm_roll_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/upper_arm_roll.dae", 0.2);
 	link_vis_info_map["l_upper_arm_link"] = linkVisInfo("package://pr2_description/meshes/upper_arm_v0/upper_arm.dae", 0.2);
 	link_vis_info_map["l_elbow_flex_link"] = linkVisInfo("package://pr2_description/meshes/upper_arm_v0/elbow_flex.dae", 0.15);
@@ -19,17 +17,13 @@ void GiskardVisualizer::init(){
 	//mesh_resource_path["l_force_torque_adapter_link"] = "package://pr2_description/meshes/base_v0/base.dae"
 	//mesh_resource_path["l_force_torque_link"] = "package://pr2_description/meshes/base_v0/base.dae"
 	link_vis_info_map["l_gripper_palm_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/gripper_palm.dae", 0.07);
-	link_vis_info_map["l_gripper_r_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07);
+	link_vis_info_map["l_gripper_r_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1.8, 0.0, 0.0, 0.0)));
 	link_vis_info_map["l_gripper_l_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07);
 	link_vis_info_map["l_gripper_l_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07);
-	link_vis_info_map["l_gripper_r_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07);
-	
-	//link_vis_info_map["l_gripper_l_finger_tip_frame"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07);
+	link_vis_info_map["l_gripper_r_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1.8, 0.0, 0.0, 0.0)));
 
 
-	//right arm
-	link_vis_info_map["r_shoulder_pan_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_pan.dae", 0.2);
-	link_vis_info_map["r_shoulder_lift_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_lift.dae", 0.2);
+	// right arm
 	link_vis_info_map["r_upper_arm_roll_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/upper_arm_roll.dae", 0.2);
 	link_vis_info_map["r_upper_arm_link"] = linkVisInfo("package://pr2_description/meshes/upper_arm_v0/upper_arm.dae", 0.2);
 	link_vis_info_map["r_elbow_flex_link"] = linkVisInfo("package://pr2_description/meshes/upper_arm_v0/elbow_flex.dae", 0.15);
@@ -40,6 +34,31 @@ void GiskardVisualizer::init(){
 	//mesh_resource_path["l_force_torque_adapter_link"] = "package://pr2_description/meshes/base_v0/base.dae"
 	//mesh_resource_path["l_force_torque_link"] = "package://pr2_description/meshes/base_v0/base.dae"
 	link_vis_info_map["r_gripper_palm_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/gripper_palm.dae", 0.07);
+	link_vis_info_map["r_gripper_r_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1.8, 0.0, 0.0, 0.0)));
+	link_vis_info_map["r_gripper_l_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07);
+	link_vis_info_map["r_gripper_l_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07);
+	link_vis_info_map["r_gripper_r_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1.8, 0.0, 0.0, 0.0)));
+
+	// Head
+	link_vis_info_map["head_pan_link"] = linkVisInfo("package://pr2_description/meshes/head_v0/head_pan.dae", 0.7);
+	link_vis_info_map["head_tilt_link"] = linkVisInfo("package://pr2_description/meshes/head_v0/head_tilt.dae", 0.07);
+	//link_vis_info_map["head_mount_link"] = linkVisInfo("package://pr2_description/meshes/sensors/kinect_v0/kinect_mount.stl", 0.07);
+	
+	// Shoulder
+	link_vis_info_map["l_shoulder_pan_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_pan.dae", 0.2);
+	link_vis_info_map["l_shoulder_lift_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_lift.dae", 0.2);
+
+	link_vis_info_map["r_shoulder_pan_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_pan.dae", 0.2);
+	link_vis_info_map["r_shoulder_lift_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_lift.dae", 0.2);
+
+	// Torso
+	link_vis_info_map["torso_lift_link"] = linkVisInfo("package://pr2_description/meshes/torso_v0/torso_lift.dae", 1);
+
+	// Base
+	link_vis_info_map["base_link"] = linkVisInfo("package://pr2_description/meshes/base_v0/base.dae", 1);
+	
+	
+
 }
 
 
@@ -279,19 +298,21 @@ void GiskardVisualizer::visualizeJointcommand(const giskard_msgs::Controller& c,
 			KDL::Frame final_frame = base * tip_link_frame;
 			//std::cout << "		final_frame x " << final_frame.p.x() << " y " << final_frame.p.y() << " z " << final_frame.p.z() << std::endl;
 			
-			publishJointMarker(final_frame, it->second.mesh_resource_path, marker_id + base_marker_id, c.root_link);
+			publishJointMarker(final_frame, it->second, marker_id + base_marker_id, c.root_link);
 			marker_id++;
  	   }
 	}
 }
 
-void GiskardVisualizer::publishJointMarker(KDL::Frame jointFrame, std::string mesh_path, int id, std::string frame_id){
+void GiskardVisualizer::publishJointMarker(KDL::Frame jointFrame, linkVisInfo vis_info, int id, std::string frame_id){
 	visualization_msgs::Marker marker;
 	marker.type = visualization_msgs::Marker::MESH_RESOURCE;
-	marker.mesh_resource = mesh_path;
+	marker.mesh_resource = vis_info.mesh_resource_path;
 	marker.pose.position.x = jointFrame.p.x();
 	marker.pose.position.y = jointFrame.p.y();
 	marker.pose.position.z = jointFrame.p.z();
+
+	jointFrame = jointFrame * vis_info.transform;
 
 	double x;
 	double y;

@@ -44,10 +44,12 @@ private:
 	};
 
 	struct linkVisInfo {
-		linkVisInfo(std::string mesh_resource_path, float rotation_marker_scale): mesh_resource_path(mesh_resource_path), rotation_marker_scale(rotation_marker_scale) {};
+		linkVisInfo(std::string mesh_resource_path, float rotation_marker_scale, KDL::Frame transform): mesh_resource_path(mesh_resource_path), rotation_marker_scale(rotation_marker_scale), transform(transform) {};
 		linkVisInfo(){};
+		linkVisInfo(std::string mesh_resource_path, float rotation_marker_scale): mesh_resource_path(mesh_resource_path), rotation_marker_scale(rotation_marker_scale), transform(KDL::Frame()) {};
 		std::string mesh_resource_path;
 		float rotation_marker_scale;
+		KDL::Frame transform;
 	};
 
 	void visualizeTranslation(const giskard_msgs::Controller& c, int marker_id);
@@ -55,7 +57,7 @@ private:
 	void visualizeJointcommand(const giskard_msgs::Controller& c, int base_marker_id);
 
 	void publishRotationMarker(tf::Vector3 axis, tf::Vector3 goal, int id, std::string frame_id);
-	void publishJointMarker(KDL::Frame jointFrame, std::string mesh_path, int id, std::string frame_id);
+	void publishJointMarker(KDL::Frame jointFrame, linkVisInfo vis_info, int id, std::string frame_id);
 	void publishArrowMarker(markerColor color, int id, std::string frame_id , std::string name_space, tf::Vector3 start, tf::Vector3 end);
 
 	void getTipLinks(SegmentMap::const_iterator it, std::string root, tipRootPairVector& tip_links);
