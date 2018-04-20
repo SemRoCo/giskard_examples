@@ -17,10 +17,10 @@ void GiskardVisualizer::init(){
 	//mesh_resource_path["l_force_torque_adapter_link"] = "package://pr2_description/meshes/base_v0/base.dae"
 	//mesh_resource_path["l_force_torque_link"] = "package://pr2_description/meshes/base_v0/base.dae"
 	link_vis_info_map["l_gripper_palm_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/gripper_palm.dae", 0.07);
-	link_vis_info_map["l_gripper_r_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1.8, 0.0, 0.0, 0.0)));
+	link_vis_info_map["l_gripper_r_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1, 0.0, 0.0, 0.0)));
 	link_vis_info_map["l_gripper_l_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07);
 	link_vis_info_map["l_gripper_l_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07);
-	link_vis_info_map["l_gripper_r_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1.8, 0.0, 0.0, 0.0)));
+	link_vis_info_map["l_gripper_r_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1, 0.0, 0.0, 0.0)));
 
 
 	// right arm
@@ -34,10 +34,10 @@ void GiskardVisualizer::init(){
 	//mesh_resource_path["l_force_torque_adapter_link"] = "package://pr2_description/meshes/base_v0/base.dae"
 	//mesh_resource_path["l_force_torque_link"] = "package://pr2_description/meshes/base_v0/base.dae"
 	link_vis_info_map["r_gripper_palm_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/gripper_palm.dae", 0.07);
-	link_vis_info_map["r_gripper_r_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1.8, 0.0, 0.0, 0.0)));
+	link_vis_info_map["r_gripper_r_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1, 0.0, 0.0, 0.0)));
 	link_vis_info_map["r_gripper_l_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07);
 	link_vis_info_map["r_gripper_l_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07);
-	link_vis_info_map["r_gripper_r_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1.8, 0.0, 0.0, 0.0)));
+	link_vis_info_map["r_gripper_r_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1, 0.0, 0.0, 0.0)));
 
 	// Head
 	link_vis_info_map["head_pan_link"] = linkVisInfo("package://pr2_description/meshes/head_v0/head_pan.dae", 0.7);
@@ -256,14 +256,19 @@ KDL::JntArray GiskardVisualizer::getJointPositionsForChain(KDL::Chain chain, con
 void GiskardVisualizer::visualizeJointcommand(const giskard_msgs::Controller& c, int base_marker_id){
 	tipRootPairVector tip_links;
 
-	SegmentMap::const_iterator root_iterator = segment_map.find(c.root_link);
+	KDL::Chain chain;
+	kdl_tree.getChain(c.root_link, c.tip_link, chain);
+	KDL::Segment s = chain.getSegment(0);
+	std::string s_name = s.getName();
+
+	SegmentMap::const_iterator root_iterator = segment_map.find(s_name);
 	
 	getTipLinks(root_iterator, c.root_link, tip_links);
 
 	int marker_id = 0;
 
 	for(auto p : tip_links){
-		std::cout << "pair: " << p.first << " " << p.second << std::endl;
+		//std::cout << "pair: " << p.first << " " << p.second << std::endl;
 
 
 		bool exit_value;
@@ -286,7 +291,7 @@ void GiskardVisualizer::visualizeJointcommand(const giskard_msgs::Controller& c,
 		
 		for(int segmentIdx = 0; segmentIdx < tip_chain.segments.size(); segmentIdx++){
 	    	std::string segment_name = tip_chain.segments[segmentIdx].getName();
-	    	std::cout << "		segment name: " << segment_name << std::endl;
+	    	//std::cout << "		segment name: " << segment_name << std::endl;
 	    	auto it = link_vis_info_map.find(segment_name);
 	    	if(it == link_vis_info_map.end() || it->second.mesh_resource_path.size() == 0){
 	    		continue;
