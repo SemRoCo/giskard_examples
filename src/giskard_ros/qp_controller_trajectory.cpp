@@ -69,6 +69,10 @@ namespace giskard_ros
           giskard_act_.start();
       }
 
+      ~QPControllerTrajectory(){
+        delete(gv);
+      }
+
     protected:
       // ROS communication
       ros::NodeHandle nh_;

@@ -10,38 +10,30 @@ void GiskardVisualizer::init(){
 	link_vis_info_map["l_upper_arm_roll_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/upper_arm_roll.dae", 0.2);
 	link_vis_info_map["l_upper_arm_link"] = linkVisInfo("package://pr2_description/meshes/upper_arm_v0/upper_arm.dae", 0.2);
 	link_vis_info_map["l_elbow_flex_link"] = linkVisInfo("package://pr2_description/meshes/upper_arm_v0/elbow_flex.dae", 0.15);
-	//mesh_resource_path["l_forearm_roll_link"] = "package://pr2_description/meshes/base_v0/base.dae"
 	link_vis_info_map["l_forearm_link"] = linkVisInfo("package://pr2_description/meshes/forearm_v0/forearm.dae", 0.15);
-	link_vis_info_map["l_wrist_flex_link"] = linkVisInfo("package://pr2_description/meshes/forearm_v0/wrist_flex.dae", 0.07);
-	//mesh_resource_path["l_wrist_roll_link"] = "package://pr2_description/meshes/base_v0/base.dae"
-	//mesh_resource_path["l_force_torque_adapter_link"] = "package://pr2_description/meshes/base_v0/base.dae"
-	//mesh_resource_path["l_force_torque_link"] = "package://pr2_description/meshes/base_v0/base.dae"
-	link_vis_info_map["l_gripper_palm_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/gripper_palm.dae", 0.07);
-	link_vis_info_map["l_gripper_r_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1, 0.0, 0.0, 0.0)));
-	link_vis_info_map["l_gripper_l_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07);
-	link_vis_info_map["l_gripper_l_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07);
-	link_vis_info_map["l_gripper_r_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1, 0.0, 0.0, 0.0)));
+	link_vis_info_map["l_wrist_flex_link"] = linkVisInfo("package://pr2_description/meshes/forearm_v0/wrist_flex.dae", 0.12);
+	link_vis_info_map["l_gripper_palm_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/gripper_palm.dae", 0.12);
+	link_vis_info_map["l_gripper_r_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.12, KDL::Frame(KDL::Rotation::Quaternion(1, 0.0, 0.0, 0.0)));
+	link_vis_info_map["l_gripper_l_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.12);
+	link_vis_info_map["l_gripper_l_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.12);
+	link_vis_info_map["l_gripper_r_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.12, KDL::Frame(KDL::Rotation::Quaternion(1, 0.0, 0.0, 0.0)));
 
 
 	// right arm
 	link_vis_info_map["r_upper_arm_roll_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/upper_arm_roll.dae", 0.2);
 	link_vis_info_map["r_upper_arm_link"] = linkVisInfo("package://pr2_description/meshes/upper_arm_v0/upper_arm.dae", 0.2);
 	link_vis_info_map["r_elbow_flex_link"] = linkVisInfo("package://pr2_description/meshes/upper_arm_v0/elbow_flex.dae", 0.15);
-	//mesh_resource_path["l_forearm_roll_link"] = "package://pr2_description/meshes/base_v0/base.dae"
 	link_vis_info_map["r_forearm_link"] = linkVisInfo("package://pr2_description/meshes/forearm_v0/forearm.dae", 0.15);
-	link_vis_info_map["r_wrist_flex_link"] = linkVisInfo("package://pr2_description/meshes/forearm_v0/wrist_flex.dae", 0.07);
-	//mesh_resource_path["l_wrist_roll_link"] = "package://pr2_description/meshes/base_v0/base.dae"
-	//mesh_resource_path["l_force_torque_adapter_link"] = "package://pr2_description/meshes/base_v0/base.dae"
-	//mesh_resource_path["l_force_torque_link"] = "package://pr2_description/meshes/base_v0/base.dae"
-	link_vis_info_map["r_gripper_palm_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/gripper_palm.dae", 0.07);
-	link_vis_info_map["r_gripper_r_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1, 0.0, 0.0, 0.0)));
-	link_vis_info_map["r_gripper_l_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.07);
-	link_vis_info_map["r_gripper_l_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07);
-	link_vis_info_map["r_gripper_r_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.07, KDL::Frame(KDL::Rotation::Quaternion(1, 0.0, 0.0, 0.0)));
+	link_vis_info_map["r_wrist_flex_link"] = linkVisInfo("package://pr2_description/meshes/forearm_v0/wrist_flex.dae", 0.12);
+	link_vis_info_map["r_gripper_palm_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/gripper_palm.dae", 0.12);
+	link_vis_info_map["r_gripper_r_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.12, KDL::Frame(KDL::Rotation::Quaternion(1, 0.0, 0.0, 0.0)));
+	link_vis_info_map["r_gripper_l_finger_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger.dae", 0.12);
+	link_vis_info_map["r_gripper_l_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.12);
+	link_vis_info_map["r_gripper_r_finger_tip_link"] = linkVisInfo("package://pr2_description/meshes/gripper_v0/l_finger_tip.dae", 0.12, KDL::Frame(KDL::Rotation::Quaternion(1, 0.0, 0.0, 0.0)));
 
 	// Head
-	link_vis_info_map["head_pan_link"] = linkVisInfo("package://pr2_description/meshes/head_v0/head_pan.dae", 0.7);
-	link_vis_info_map["head_tilt_link"] = linkVisInfo("package://pr2_description/meshes/head_v0/head_tilt.dae", 0.07);
+	link_vis_info_map["head_pan_link"] = linkVisInfo("package://pr2_description/meshes/head_v0/head_pan.dae", 0.3);
+	link_vis_info_map["head_tilt_link"] = linkVisInfo("package://pr2_description/meshes/head_v0/head_tilt.dae", 0.3);
 	//link_vis_info_map["head_mount_link"] = linkVisInfo("package://pr2_description/meshes/sensors/kinect_v0/kinect_mount.stl", 0.07);
 	
 	// Shoulder
@@ -52,10 +44,10 @@ void GiskardVisualizer::init(){
 	link_vis_info_map["r_shoulder_lift_link"] = linkVisInfo("package://pr2_description/meshes/shoulder_v0/shoulder_lift.dae", 0.2);
 
 	// Torso
-	link_vis_info_map["torso_lift_link"] = linkVisInfo("package://pr2_description/meshes/torso_v0/torso_lift.dae", 1);
+	link_vis_info_map["torso_lift_link"] = linkVisInfo("package://pr2_description/meshes/torso_v0/torso_lift.dae", 0.5);
 
 	// Base
-	link_vis_info_map["base_link"] = linkVisInfo("package://pr2_description/meshes/base_v0/base.dae", 1);
+	link_vis_info_map["base_link"] = linkVisInfo("package://pr2_description/meshes/base_v0/base.dae", 0.5);
 	
 	
 
