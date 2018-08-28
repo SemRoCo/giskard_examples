@@ -1,0 +1,19 @@
+<launch>
+
+  <arg name="output_twist" default="true" />
+  <arg name="robot_description_parameter_name" default="/robot_description" />
+
+      <node pkg="giskard_ros"
+            type="joint_state_separator" name="pr2_cmd_separator" output="screen" >
+        <rosparam param="joint_names" file="$(find giskard_pr2)/config/pr2_upper_body.yaml" />
+        <rosparam param="x_axis">[0.0, -1.0, 0.0]</rosparam>
+        <rosparam param="y_axis">[1.0, 0.0, 0.0]</rosparam>
+        <rosparam param="z_axis">[0.0, 0.0, 1.0]</rosparam>
+        <param name="linear_scale" value="1.0" type="double" />
+        <param name="angular_scale" value="57.0" type="double" />
+        <param name="robot_description_parameter_name" value="$(arg robot_description_parameter_name)" type="str" />
+        <param name="output_twist" value="$(arg output_twist)" type="bool" />
+        <remap from="~joint_states" to="/whole_body_controller/velocity_controller/command" />
+      </node>
+
+</launch>

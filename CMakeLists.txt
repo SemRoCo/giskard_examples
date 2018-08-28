@@ -13,7 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_srvs
   giskard_msgs
-  kdl_conversions)
+  kdl_conversions kdl_parser)
 
 ## Finding system dependencies which come without cmake
 find_package(PkgConfig)
@@ -24,7 +24,7 @@ find_library(YAML_CPP_LIBRARIES NAMES yaml-cpp)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp roslib giskard_core tf2_ros tf2_geometry_msgs interactive_markers geometry_msgs giskard_msgs kdl_conversions
+  CATKIN_DEPENDS roscpp roslib giskard_core tf2_ros tf2_geometry_msgs interactive_markers geometry_msgs giskard_msgs kdl_conversions kdl_parser
   DEPENDS yaml_cpp
 )
 
