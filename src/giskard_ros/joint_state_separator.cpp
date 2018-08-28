@@ -39,8 +39,15 @@ namespace giskard_ros
 
       void start() 
       {
-        std::string robot_description_parameter = readParam<std::string>(nh_, "robot_description_parameter_name");
-        output_twist_ = readParam<bool>(nh_, "output_twist");
+        std::string robot_description_parameter = (nh_.hasParam("robot_description_parameter_name"))?readParam<std::string>(nh_, "robot_description_parameter_name"):"/robot_description";
+        output_twist_ = (nh_.hasParam("output_twist"))?readParam<bool>(nh_, "output_twist"):false;
+        linear_scale_ = (nh_.hasParam("linear_scale"))?readParam<double>(nh_, "linear_scale"):1.0;
+        angular_scale_ = (nh_.hasParam("angular_scale"))?readParam<double>(nh_, "angular_scale"):1.0;
+        std::vector<double> x_def(3, 0.0), y_def(3, 0.0), z_def(3, 0.0);
+        x_def[0] = y_def[1] = z_def[2] = 1.0;
+        x_axis_ = (nh_.hasParam("x_axis"))?readParam<std::vector<double> >(nh_, "x_axis"):x_def;
+        y_axis_ = (nh_.hasParam("y_axis"))?readParam<std::vector<double> >(nh_, "y_axis"):y_def;
+        z_axis_ = (nh_.hasParam("z_axis"))?readParam<std::vector<double> >(nh_, "z_axis"):z_def;
         if (output_twist_ && !robot_model_.initParam(robot_description_parameter))
         {
             throw std::runtime_error("Could not read urdf from parameter server at '" + robot_description_parameter + "'.");
@@ -68,10 +75,13 @@ namespace giskard_ros
       ros::Subscriber sub_;
       std::vector<ros::Publisher> pubs_;
       std::vector<std::string> joint_names_;
+      std::vector<double> x_axis_, y_axis_, z_axis_;
 
       urdf::Model robot_model_;
       bool robot_model_loaded_;
       bool output_twist_;
+      double linear_scale_;
+      double angular_scale_;
 
       void callback(const sensor_msgs::JointState::ConstPtr& msg)
       {
@@ -104,15 +114,17 @@ namespace giskard_ros
             out_msg.angular.x = out_msg.angular.y = out_msg.angular.z = 0.0;
             if(prismatic)
             {
-                out_msg.linear.x = joint->axis.x*vel;
-                out_msg.linear.y = joint->axis.y*vel;
-                out_msg.linear.z = joint->axis.z*vel;
+                vel = vel*linear_scale_;
+                out_msg.linear.x = joint->axis.x*vel*x_axis_[0] + joint->axis.y*vel*y_axis_[0] + joint->axis.z*vel*z_axis_[0];
+                out_msg.linear.y = joint->axis.x*vel*x_axis_[1] + joint->axis.y*vel*y_axis_[1] + joint->axis.z*vel*z_axis_[1];
+                out_msg.linear.z = joint->axis.x*vel*x_axis_[2] + joint->axis.y*vel*y_axis_[2] + joint->axis.z*vel*z_axis_[2];
             }
             if(revolute)
             {
-                out_msg.angular.x = joint->axis.x*vel;
-                out_msg.angular.y = joint->axis.y*vel;
-                out_msg.angular.z = joint->axis.z*vel;
+                vel = vel*angular_scale_;
+                out_msg.angular.x = joint->axis.x*vel*x_axis_[0] + joint->axis.y*vel*y_axis_[0] + joint->axis.z*vel*z_axis_[0];
+                out_msg.angular.y = joint->axis.x*vel*x_axis_[1] + joint->axis.y*vel*y_axis_[1] + joint->axis.z*vel*z_axis_[1];
+                out_msg.angular.z = joint->axis.x*vel*x_axis_[2] + joint->axis.y*vel*y_axis_[2] + joint->axis.z*vel*z_axis_[2];
             }
             pubs_[i].publish(out_msg);
 
