@@ -33,6 +33,7 @@
 #include <giskard_core/giskard_core.hpp>
 #include <giskard_ros/ros_utils.hpp>
 #include <giskard_ros/conversions.hpp>
+#include <giskard_ros/giskard_visualization.hpp>
 
 namespace giskard_ros
 {
@@ -51,6 +52,8 @@ namespace giskard_ros
           trigger_param_loading_serv_( nh_.advertiseService("reload_params", &QPControllerTrajectory::reload_params_callback, this)),
           tf_(std::make_shared<tf2_ros::BufferClient>(tf_ns))
       {
+        gv = new GiskardVisualizer(nh_, current_joint_state_);
+
         read_parameters();
 
         if (!joint_traj_act_.waitForServer(server_timeout))
@@ -64,6 +67,10 @@ namespace giskard_ros
           new_giskard_act_.start();
         else
           giskard_act_.start();
+      }
+
+      ~QPControllerTrajectory(){
+        delete(gv);
       }
 
     protected:
@@ -91,6 +98,8 @@ namespace giskard_ros
               rot3d_max_speed_, rot3d_p_gain_, rot3d_weight_, joint_max_speed_, joint_p_gain_, joint_weight_;
       int nWSR_;
       size_t min_num_trajectory_points_, max_num_trajectory_points_;
+
+       GiskardVisualizer *gv;
 
       void js_callback(const sensor_msgs::JointState::ConstPtr& msg)
       {
@@ -164,6 +173,8 @@ namespace giskard_ros
           ros::Time start_time = ros::Time::now();
           ros::Rate monitor_rate(10); // TODO: get this from the parameter server?
 
+           gv->deleteMarkers();
+           
           while((ros::Time::now() - start_time) <= traj_duration)
           {
             if (new_giskard_act_.isPreemptRequested() || !ros::ok())
@@ -182,6 +193,8 @@ namespace giskard_ros
               joint_traj_act_.cancelAllGoals();
               break;
             }
+
+            gv->visualizeController(goal);
 
             // TODO: re-run projection to emulate reactiveness
             monitor_rate.sleep();
